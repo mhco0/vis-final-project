@@ -10,7 +10,7 @@ console.log(steamDataset);
 for(let i = 0; i < 10; i++){
     console.log(await getPriceHistory(steamDataset[i]["id"]));
     console.log(await getPlayerCount(steamDataset[i]["id"], PlayerCountHistoryPathType.f2f));
-    console.log(await getPlayerCount(steamDataset[i]["id"], PlayerCountHistoryPathType.t2t));
+    console.log(await getPlayerCount(steamDataset[i]["id"], PlayerCountHistoryPathType.h2h));
 }
 
 //https://stackoverflow.com/questions/13870265/read-csv-tsv-with-no-header-line-in-d3 

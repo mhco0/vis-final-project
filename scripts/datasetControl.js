@@ -1,7 +1,7 @@
 // getting data https://data.mendeley.com/datasets/ycy3sy3vj2/1
 const dataPath = "../data/SteamDataset/";
 const playerCountPath1 = dataPath + "PlayerCountHistoryPart1/"; // data from top 1000 get from 5 to 5 minutes
-const playerCountPath2 = dataPath + "PlayerCountHistoryPart2/"; // data from the next top 1000 get from 20 to 20 minutes
+const playerCountPath2 = dataPath + "PlayerCountHistoryPart2/"; // data from the next top 1000 get from hour to hour
 const priceHistoryPath = dataPath + "PriceHistory/";
 
 const steamDevelopersFilename = dataPath + "applicationDevelopers.csv";
@@ -65,13 +65,15 @@ function addPropsFromCsv(data, filename, prop){
 export async function loadSteamDataset(){
     let steamDataset = [];
     /// Processing all datasets
+    const parseDate = d3.timeParse("%d-%b-%y");
+
     await d3.csv(steamInfoFilename, function(line){
         return {
             "id": line["appid"],
             "props": {
                 "type": line["type"],
                 "name": line["name"],
-                "release_date": line["releasedate"],
+                "release_date": parseDate(line["releasedate"]),
                 "free_to_play": (line["freetoplay"] === "1"),
                 "developers": [],
                 "genres": [],
@@ -100,7 +102,7 @@ export async function loadSteamDataset(){
 /// This variables contains the paths for the players count history
 export const PlayerCountHistoryPathType = {
     f2f: playerCountPath1,
-    t2t: playerCountPath2
+    h2h: playerCountPath2
 }
 
 /**
@@ -110,15 +112,18 @@ export const PlayerCountHistoryPathType = {
  * @returns {array} A array of objects with the player count history or a empty array if the file was not found.
 */
 export async function getPlayerCount(id, path){
+    
     let playerCount = [];
     let filename = path + "" + id + ".csv";
 
     let exists = await fileExists(filename);
     if (!exists) return playerCount;
 
+    const parseTime = d3.timeParse("%Y-%m-%d %H:%M");
+
     await d3.csv(filename, function(line){
         return {
-            "time": line["Time"],
+            "time": parseTime(line["Time"]),
             "player_count": line["Playercount"]
         };
     }).then((data) =>{
@@ -140,9 +145,11 @@ export async function getPriceHistory(id){
     let exists = await fileExists(filename);
     if (!exists) return priceHistory;
 
+    const parseDate = d3.timeParse("%Y-%m-%d");
+
     await d3.csv(filename, function(line){
         return {
-            "date": line["Date"],
+            "date": parseDate(line["Date"]),
             "initial_price": line["Initialprice"],
             "final_price": line["Finalprice"],
             "discount": line["Discount"]
