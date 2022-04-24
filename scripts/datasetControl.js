@@ -144,7 +144,7 @@ export async function getPriceHistory(id){
         return {
             "date": line["Date"],
             "initial_price": line["Initialprice"],
-            "final_price": line["FinalPrice"],
+            "final_price": line["Finalprice"],
             "discount": line["Discount"]
         };
     }).then((data) =>{
