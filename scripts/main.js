@@ -1,5 +1,5 @@
 import { loadSteamDataset, getPriceHistory, getPlayerCount, PlayerCountHistoryPathType } from "./datasetControl.js";
-import { buildLineGraph } from "./graphs.js"
+import { buildLineGraph } from "./graphics.js"
 
 let steamDataset = await loadSteamDataset();
 
