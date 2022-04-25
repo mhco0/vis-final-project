@@ -99,6 +99,19 @@ export async function loadSteamDataset(){
     return steamDataset;
 }
 
+///The Domain for the SteamDataset in Price History -> 07-04-2019 to 12-08-2020
+export const PriceHistoryDomain = {
+    begin: new Date(2019, 3, 7), // Mouth : 0 -> Jan; 11 -> Dec. So 07-04-2019 becomes 2019(Y), 3(m), 7(d)
+    end: new Date(2020, 7, 11)
+}
+
+
+///The Domain for the SteamDataset in Player Count -> 14-12-2017 to 12-08-2020
+export const PlayerCountHistoryDomain = {
+    begin: new Date(2017, 11, 14), 
+    end: new Date(2020, 7, 12)
+}
+
 /// This variables contains the paths for the players count history
 export const PlayerCountHistoryPathType = {
     f2f: playerCountPath1,
