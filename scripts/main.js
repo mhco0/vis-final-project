@@ -6,8 +6,8 @@ import { kmeans } from "./thirdparty/Kmeans.js";
 
 let steamDataset = await loadSteamDataset();
 
-/*console.log(steamDataset);
-
+//console.log(steamDataset);
+/*
 for(let i = 0; i < 10; i++){
     console.log(await getPriceHistory(steamDataset[i]["id"]));
     console.log(await getPlayerCount(steamDataset[i]["id"], PlayerCountHistoryPathType.f2f));
@@ -27,7 +27,33 @@ let csPriceHistory = await getPlayerCount(steamDataset[1]["id"], PlayerCountHist
 
 //d3.select("#line_graph_div").node().appendChild(calendar);
 
-const convertToKmean = (data, xCol, yCol) => {
+const getGenres = (data) => {
+    let uniqueGenre = [];
+    data.forEach(element => {
+        element["props"]["genres"].forEach(genre => uniqueGenre.push(genre));
+    });
+
+    uniqueGenre = [...new Set(uniqueGenre)];
+
+    return uniqueGenre;
+}
+
+const getGamesByGenre = (data, genre) => {
+    let games = [];
+
+    data.forEach(element => {
+        if (element["props"]["genres"].includes(genre)){
+            games.push({
+                "name": element["props"]["name"],
+                "id": element["id"]
+            });
+        }
+    });
+
+    return games;
+}
+
+const adaptDataToKmeans = (data, xCol, yCol) => {
     let convertData = [];
 
     data.forEach(element => {
@@ -40,14 +66,41 @@ const convertToKmean = (data, xCol, yCol) => {
     return convertData;
 };
 
-console.log("before");
-console.log(csPriceHistory);
+const genres = getGenres(steamDataset);
+genres.sort(function(a, b){return a.localeCompare(b);});
 
-let newData = convertToKmean(csPriceHistory, "time", "player_count");
+//console.log(getGamesByGenre(steamDataset, genres[5]));
 
-kmeans(newData, 10);
+d3.select("#genreBox")
+    .selectAll('myOptions')
+    .data(genres)
+    .enter()
+    .append("option")
+    .text(function (d) { return d; })
+    .attr("value", function (d) { return d; });
+    
+    
+d3.select("#genreBox")
+    .on("change", function(d) {
+        const selectedGenre = d3.select(this).property("value");
 
-console.log(newData);
+        const gamesByGenre = getGamesByGenre(steamDataset, selectedGenre);
+        gamesByGenre.sort(function(a, b){return a["name"].localeCompare(b["name"]);});
+
+        d3.select("#gameBox").html("");
+        d3.select("#gameBox")
+            .selectAll("myOptions")
+            .data(gamesByGenre)
+            .enter()
+            .append("option")
+            .text(function(d) { return d["name"];})
+            .attr("value", function (d) { return d["id"];});
+    });
+
+//let newData = adaptDataToKmeans(csPriceHistory, "time", "player_count");
+
+//kmeans(newData, 10);
+
 //console.log(calendarCluster(csPriceHistory, "time", "player_count", 150));
 
 //https://stackoverflow.com/questions/13870265/read-csv-tsv-with-no-header-line-in-d3 
