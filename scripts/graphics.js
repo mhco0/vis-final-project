@@ -55,7 +55,7 @@ export function buildLineGraph(dataset, timeCollumn, valueCollumn){
         );
 }
 
-export function lineGraph(dataset, {
+export function LineGraph(dataset, {
     x = ([x]) => x, // given d in data, returns the (temporal) x-value
     y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
     title, // given d in data, returns the title text
@@ -66,6 +66,8 @@ export function lineGraph(dataset, {
 } = {}){
     const svgWidth = width - margin.left - margin.right;
     const svgHeight = height - margin.top - margin.bottom;
+
+    console.log(svgWidth, svgHeight);
 
     const lineGraphId = "line_graph";
     const lineGraphViewGroupId = "line_graph_view_group";
@@ -89,19 +91,21 @@ export function lineGraph(dataset, {
                 })])
                 .range([svgHeight, 0]).nice();
 
-    d3.select("#" + lineGraphViewGroupId)
+    svg.select("#" + lineGraphViewGroupId)
         .append("g")
         .attr("transform", "translate(0, " + svgHeight + ")")
         .call(d3.axisBottom(xScale)
                 .ticks(d3.timeMonth.every(1))
-                .tickFormat(d => d <= d3.timeMonth(d) ? d.getMonth() + 1 : null)
+                .tickFormat(d => { 
+                    console.log(d);
+                    return d <= d3.timeMonth(d) ? d.getMonth() + 1 : null;})
         );
         
-    d3.select("#" + lineGraphViewGroupId)
+    svg.select("#" + lineGraphViewGroupId)
         .append("g")
         .call(d3.axisLeft(yScale));
 
-    d3.select("#" + lineGraphViewGroupId)
+    svg.select("#" + lineGraphViewGroupId)
         .append("path")
         .datum(dataset)
         .attr("fill", "none")

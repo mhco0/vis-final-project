@@ -1,6 +1,6 @@
 import { loadSteamDataset, getPriceHistory, getPlayerCount, PlayerCountHistoryPathType } from "./datasetControl.js";
 import { Calendar } from "./thirdparty/Calendar.js";
-import { buildLineGraph } from "./graphics.js"
+import { buildLineGraph, LineGraph } from "./graphics.js"
 import { calendarCluster } from "./calendarCluster.js";
 import { kmeans } from "./thirdparty/Kmeans.js";
 
@@ -27,6 +27,10 @@ let csPriceHistory = await getPlayerCount(steamDataset[1]["id"], PlayerCountHist
 
 //d3.select("#line_graph_div").node().appendChild(calendar);
 
+const findGameById = (data, id) => {
+    return data.find(x => x["id"] === id);
+};
+
 const getGenres = (data) => {
     let uniqueGenre = [];
     data.forEach(element => {
@@ -36,7 +40,7 @@ const getGenres = (data) => {
     uniqueGenre = [...new Set(uniqueGenre)];
 
     return uniqueGenre;
-}
+};
 
 const getGamesByGenre = (data, genre) => {
     let games = [];
@@ -51,7 +55,7 @@ const getGamesByGenre = (data, genre) => {
     });
 
     return games;
-}
+};
 
 const adaptDataToKmeans = (data, xCol, yCol) => {
     let convertData = [];
@@ -95,6 +99,37 @@ d3.select("#genreBox")
             .append("option")
             .text(function(d) { return d["name"];})
             .attr("value", function (d) { return d["id"];});
+
+        d3.select("#gameBox")
+            .on("change", async function(d) {
+                const gameId = d3.select(this).property("value");
+                
+                let game = findGameById(steamDataset, gameId);
+
+                console.log(game);
+                // need to adapt here for the dataset type. Maybe this isn't suppost to be a user decision 
+                let gamePlayerCount = await getPlayerCount(game["id"], PlayerCountHistoryPathType.f2f);
+
+                console.log(gamePlayerCount.length > 0);
+
+                const lineGraph = LineGraph(gamePlayerCount, {
+                    x: "time",
+                    y: "player_count"
+                });
+
+                const calendar = Calendar(gamePlayerCount, {
+                    x: d => d["time"],
+                    y: d => d["player_count"]
+                })
+                
+                console.log(lineGraph);
+
+                d3.select("#line_graph_div").node().innerHTML = '';
+                d3.select("#line_graph_div").node().appendChild(lineGraph);
+
+                d3.select("#calendar_graph_div").node().innerHTML = '';
+                d3.select("#calendar_graph_div").node().appendChild(calendar);
+            });
     });
 
 //let newData = adaptDataToKmeans(csPriceHistory, "time", "player_count");
