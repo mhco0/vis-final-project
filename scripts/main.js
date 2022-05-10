@@ -3,6 +3,7 @@ import { Calendar } from "./thirdparty/Calendar.js";
 import { buildLineGraph, LineGraph } from "./graphics.js"
 import { calendarCluster } from "./calendarCluster.js";
 import { kmeans } from "./thirdparty/Kmeans.js";
+import { getGenres, getGamesByGenre, adaptDataToKmeans, findGameById, groupDataFromClusters } from "./utils.js";
 
 let steamDataset = await loadSteamDataset();
 
@@ -27,51 +28,12 @@ let csPriceHistory = await getPlayerCount(steamDataset[1]["id"], PlayerCountHist
 
 //d3.select("#line_graph_div").node().appendChild(calendar);
 
-const findGameById = (data, id) => {
-    return data.find(x => x["id"] === id);
-};
 
-const getGenres = (data) => {
-    let uniqueGenre = [];
-    data.forEach(element => {
-        element["props"]["genres"].forEach(genre => uniqueGenre.push(genre));
-    });
-
-    uniqueGenre = [...new Set(uniqueGenre)];
-
-    return uniqueGenre;
-};
-
-const getGamesByGenre = (data, genre) => {
-    let games = [];
-
-    data.forEach(element => {
-        if (element["props"]["genres"].includes(genre)){
-            games.push({
-                "name": element["props"]["name"],
-                "id": element["id"]
-            });
-        }
-    });
-
-    return games;
-};
-
-const adaptDataToKmeans = (data, xCol, yCol) => {
-    let convertData = [];
-
-    data.forEach(element => {
-        convertData.push({
-            x: element[xCol],
-            y: element[yCol]
-        })
-    });
-
-    return convertData;
-};
 
 const genres = getGenres(steamDataset);
 genres.sort(function(a, b){return a.localeCompare(b);});
+
+let K = 10;
 
 //console.log(getGamesByGenre(steamDataset, genres[5]));
 
@@ -106,23 +68,30 @@ d3.select("#genreBox")
                 
                 let game = findGameById(steamDataset, gameId);
 
-                console.log(game);
+                // console.log(game);
                 // need to adapt here for the dataset type. Maybe this isn't suppost to be a user decision 
                 let gamePlayerCount = await getPlayerCount(game["id"], PlayerCountHistoryPathType.f2f);
 
                 console.log(gamePlayerCount.length > 0);
 
-                const lineGraph = LineGraph(gamePlayerCount, {
-                    x: "time",
-                    y: "player_count"
+                let convertedData = adaptDataToKmeans(gamePlayerCount, "time", "player_count");
+
+                kmeans(convertedData, K);
+
+                const calendar = Calendar(convertedData, {
+                    x: d => d["x"],
+                    y: d => d["cluster"],
+                    colors: d3.schemeTableau10,
+                    clusterNumber: K
                 });
 
-                const calendar = Calendar(gamePlayerCount, {
-                    x: d => d["time"],
-                    y: d => d["player_count"]
-                })
-                
-                console.log(lineGraph);
+                let clusteringData = groupDataFromClusters(convertedData, "x", "y", "cluster");
+
+                console.log(clusteringData);
+                const lineGraph = LineGraph(clusteringData, {
+                    x: "x",
+                    y: "y"
+                });
 
                 d3.select("#line_graph_div").node().innerHTML = '';
                 d3.select("#line_graph_div").node().appendChild(lineGraph);

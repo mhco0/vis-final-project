@@ -11,7 +11,8 @@ export function Calendar(data, {
     formatDay = i => "SMTWTFS"[i], // given a day number in [0, 6], the day-of-week label
     formatMonth = "%b", // format specifier string for months (above the chart)
     yFormat, // format specifier string for values (in the title)
-    colors = d3.interpolatePiYG
+    colors = d3.interpolatePiYG,
+    clusterNumber = 10
   } = {}) {
     // Compute values.
     const X = d3.map(data, x);
@@ -25,8 +26,18 @@ export function Calendar(data, {
   
     // Compute a color scale. This assumes a diverging color scheme where the pivot
     // is zero, and we want symmetric difference around zero.
-    const max = d3.quantile(Y, 0.9975, Math.abs);
-    const color = d3.scaleSequential([-max, +max], colors).unknown("none");
+    //const max = d3.quantile(Y, 0.9975, Math.abs);
+    //const min = d3.min(Y);
+    let clusterDomain = [];
+    for(let i = 0; i <= clusterNumber; i++){
+      clusterDomain.push(i);
+    }
+
+    //const color = d3.scaleOrdinal(clusterDomain, colors).unknown("none");
+    //const color = d3.scaleSequential([-max, +max], colors).unknown("none");
+    const color = d3.scaleSequential(clusterDomain, colors).unknown("none");
+    
+
   
     // Construct formats.
     formatMonth = d3.utcFormat(formatMonth);

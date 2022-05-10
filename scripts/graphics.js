@@ -62,15 +62,23 @@ export function LineGraph(dataset, {
     width = 720, // width of the chart, in pixels
     height = 480,
     margin = {top: 10, right: 30, bottom: 30, left: 60},
-    colors = d3.interpolatePiYG
+    colors =  d3.schemeTableau10,
+    clusterNumber = 10
 } = {}){
     const svgWidth = width - margin.left - margin.right;
     const svgHeight = height - margin.top - margin.bottom;
 
-    console.log(svgWidth, svgHeight);
+    //console.log(svgWidth, svgHeight);
 
     const lineGraphId = "line_graph";
     const lineGraphViewGroupId = "line_graph_view_group";
+
+    let clusterDomain = [];
+    for(let i = 0; i <= clusterNumber; i++){
+      clusterDomain.push(i);
+    }
+
+    const color = d3.scaleSequential(clusterDomain, colors).unknown("none");
 
     const svg = d3.create("svg")
     .attr("id", lineGraphId)
@@ -82,16 +90,25 @@ export function LineGraph(dataset, {
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     let xScale = d3.scaleTime()
-                .domain([PlayerCountHistoryDomain.begin, PlayerCountHistoryDomain.end])
-                .range([0, svgWidth]).nice();
+                .domain([0, 23])
+                .range([0, svgWidth - margin.left - margin.right]).nice();
+
+
+    let maxValue = 0;
+
+    //console.log(dataset);
+
+    for(let i = 0; i < clusterDomain.length; i++){
+        maxValue = Math.max(maxValue, d3.max(dataset[clusterDomain[i]], function(d){
+            return +d[y];
+        }));
+    }
 
     let yScale = d3.scaleLinear()
-                .domain([0, d3.max(dataset, function(d){
-                    return +d[y];
-                })])
+                .domain([0, maxValue])
                 .range([svgHeight, 0]).nice();
 
-    svg.select("#" + lineGraphViewGroupId)
+    /*svg.select("#" + lineGraphViewGroupId)
         .append("g")
         .attr("transform", "translate(0, " + svgHeight + ")")
         .call(d3.axisBottom(xScale)
@@ -99,17 +116,31 @@ export function LineGraph(dataset, {
                 .tickFormat(d => { 
                     console.log(d);
                     return d <= d3.timeMonth(d) ? d.getMonth() + 1 : null;})
+        );*/
+
+    svg.select("#" + lineGraphViewGroupId)
+        .append("g")
+        .attr("transform", "translate(0, " + svgHeight + ")")
+        .call(d3.axisBottom(xScale)
+                .ticks(24)
+                .tickFormat(function (d) {
+                    console.log(d);
+                    return d[x];
+                })
         );
         
     svg.select("#" + lineGraphViewGroupId)
         .append("g")
         .call(d3.axisLeft(yScale));
 
-    svg.select("#" + lineGraphViewGroupId)
+    for(let i = 0; i < clusterDomain.length; i++){
+        svg.select("#" + lineGraphViewGroupId)
         .append("path")
-        .datum(dataset)
+        .datum(dataset[clusterDomain[i]])
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
+        .attr("stroke", function(d) {
+            return color(clusterDomain[i]);
+        })
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
                 .x(function(d) {
@@ -119,6 +150,7 @@ export function LineGraph(dataset, {
                     return yScale(d[y]); 
                 })
         );
-
+    }
+    
     return Object.assign(svg.node(), {});
 }
