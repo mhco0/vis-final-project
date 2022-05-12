@@ -18,6 +18,14 @@ class requestHandler(BaseHTTPRequestHandler):
             print(df.head())
             js = df.to_json(orient = 'records')
             self.wfile.write(js.encode())
+
+        elif method == '/InterestByRegion':
+            search = self.extractSearch(self.path)
+            pytrend.build_payload([search])
+            df = pytrend.interest_by_region(resolution='COUNTRY', inc_low_vol=True,  inc_geo_code=True)
+            print(df.head())
+            js = df.to_json(orient = 'records')
+            self.wfile.write(js.encode())
     
     def extractMethod(self, path):
         method = path.split('?')
@@ -33,7 +41,7 @@ class requestHandler(BaseHTTPRequestHandler):
 
 
 
-PORT = 8000
+PORT = 9000
 server = HTTPServer(('',PORT), requestHandler)
 print(f'server running on port {PORT}')
 pytrend = TrendReq()
