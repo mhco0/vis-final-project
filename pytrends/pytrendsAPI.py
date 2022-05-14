@@ -13,6 +13,7 @@ class requestHandler(BaseHTTPRequestHandler):
         method = self.extractMethod(self.path)
         if method == '/InterestOverTime':
             search = self.extractSearch(self.path)
+            search = search.replace('%20', ' ')
             pytrend.build_payload([search])
             df = pytrend.interest_over_time()
             print(df.head())
@@ -21,6 +22,7 @@ class requestHandler(BaseHTTPRequestHandler):
 
         elif method == '/InterestByRegion':
             search = self.extractSearch(self.path)
+            search = search.replace('%20', ' ')
             pytrend.build_payload([search])
             df = pytrend.interest_by_region(resolution='COUNTRY', inc_low_vol=True,  inc_geo_code=True)
             print(df.head())
