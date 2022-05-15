@@ -66,6 +66,17 @@ d3.select("#genreBox")
 
         d3.select("#gameBox")
             .on("change", async function(d) {
+                console.log("loading...");
+                d3.select("#loading")
+                .attr("class", "loading")
+                .append("img")
+                .attr("src", "../assets/ajax-loader.gif")
+                .attr("alt", "Loading...");
+
+                d3.select("#map_graph_div").node().innerHTML = '';
+                d3.select("#line_graph_div").node().innerHTML = '';
+                d3.select("#calendar_graph_div").node().innerHTML = '';
+
                 const gameId = d3.select(this).property("value");
 
                 let game = findGameById(steamDataset, gameId);
@@ -73,39 +84,35 @@ d3.select("#genreBox")
                 // need to adapt here for the dataset type. Maybe this isn't suppost to be a user decision 
                 let gamePlayerCount = await getPlayerCount(game["id"], PlayerCountHistoryPathType.f2f);
 
-                console.log(gamePlayerCount.length > 0);
-
-                let convertedData = adaptDataToKmeans(gamePlayerCount, "time", "player_count");
-
-                kmeans(convertedData, K);
-
-                const calendar = Calendar(convertedData, {
-                    x: d => d["x"],
-                    y: d => d["cluster"],
-                    colors: d3.schemeTableau10,
-                    clusterNumber: K
-                });
-
-                let clusteringData = groupDataFromClusters(convertedData, "x", "y", "cluster");
-
-                const lineGraph = LineGraph(clusteringData, {
-                    x: "x",
-                    y: "y"
-                });
-                console.log(lineGraph);
-
                 const gameName = game["props"]["name"];
-
                 const mapGraph = await MapGraph(geoJson, gameName);
-                
-                d3.select("#map_graph_div").node().innerHTML = '';
                 d3.select("#map_graph_div").node().appendChild(mapGraph);
 
-                d3.select("#line_graph_div").node().innerHTML = '';
-                d3.select("#line_graph_div").node().appendChild(lineGraph);
+                if(gamePlayerCount.length > 0){
+                    let convertedData = adaptDataToKmeans(gamePlayerCount, "time", "player_count");
+    
+                    kmeans(convertedData, K);
+    
+                    const calendar = Calendar(convertedData, {
+                        x: d => d["x"],
+                        y: d => d["cluster"],
+                        colors: d3.schemeTableau10,
+                        clusterNumber: K
+                    });
+    
+                    let clusteringData = groupDataFromClusters(convertedData, "x", "y", "cluster");
+    
+                    const lineGraph = LineGraph(clusteringData, {
+                        x: "x",
+                        y: "y"
+                    });
+                    console.log(lineGraph);
+                    
+                    d3.select("#line_graph_div").node().appendChild(lineGraph);
+                    d3.select("#calendar_graph_div").node().appendChild(calendar);
+                }
 
-                d3.select("#calendar_graph_div").node().innerHTML = '';
-                d3.select("#calendar_graph_div").node().appendChild(calendar);
+                d3.select("#loading").attr("class", "").node().innerHTML = '';
             });
     });
 
