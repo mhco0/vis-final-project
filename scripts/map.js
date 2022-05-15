@@ -38,16 +38,31 @@ export async function MapGraph(geoJson, gameName, {
         countries.forEach(country => {
             let id = country;
 
-            if(country == "United States"){
+            if (country == "United States") {
                 id = "USA";
-            }else if( country == "United Kingdom"){
+            } else if (country == "United Kingdom") {
                 id = "England";
-            }else if(country.includes('&')){
+            } else if (country.includes('&')) {
                 id = country.replace('&', 'and');
             }
 
             data.set(id, trends[country][gameName]);
         });
+
+        let mouseOver = function (d) {
+            d3.selectAll(".Country")
+                .style("opacity", .5)
+            d3.select(this)
+                .style("opacity", 1)
+                .style("stroke", "black")
+        }
+
+        let mouseLeave = function (d) {
+            d3.selectAll(".Country")
+                .style("opacity", .8)
+            d3.select(this)
+                .style("stroke", "#c9d6ff")
+        }
 
         // Draw the map
         svg.append("g")
@@ -63,6 +78,11 @@ export async function MapGraph(geoJson, gameName, {
                 d.total = data.get(d.properties.name) || 0;
                 return colorScale(d.total);
             })
+            .style("stroke", "#c9d6ff")
+            .attr("class", function (d) { return "Country" })
+            .style("opacity", .8)
+            .on("mouseover", mouseOver)
+            .on("mouseleave", mouseLeave)
     })
 
     return Object.assign(svg.node(), {});
