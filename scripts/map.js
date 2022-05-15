@@ -14,6 +14,7 @@ export async function MapGraph(geoJson, gameName, {
         .attr("width", svgWidth + margin.left + margin.right)
         .attr("height", svgHeight + margin.top + margin.bottom)
 
+
     // Map and projection
     const path = d3.geoPath();
     const projection = d3.geoMercator()
@@ -24,8 +25,8 @@ export async function MapGraph(geoJson, gameName, {
     // Data and color scale
     const data = new Map();
     const colorScale = d3.scaleThreshold()
-        .domain([10, 15, 30, 45, 60, 75, 100])
-        .range(d3.schemeBlues[7]);
+        .domain([1, 5, 10, 15, 20, 30, 45, 60, 75, 100])
+        .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
 
     // Get trends from API and boot
     await Promise.all([
@@ -49,7 +50,15 @@ export async function MapGraph(geoJson, gameName, {
             data.set(id, trends[country][gameName]);
         });
 
+        // create a tooltip
+        var Tooltip = d3.select("#map_graph_div")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0)
+            .html( `<strong></strong><br/>Total:`)
+
         let mouseOver = function (d) {
+            Tooltip.style("opacity", 1)
             d3.selectAll(".Country")
                 .style("opacity", .5)
             d3.select(this)
@@ -57,7 +66,15 @@ export async function MapGraph(geoJson, gameName, {
                 .style("stroke", "black")
         }
 
+        let mouseMove = function (event, d) {
+            Tooltip
+                .html( `<strong>${d.properties.name}</strong><br/>Total: ${d.total}`)
+                .style("left", (event.x) / 2 + "px")
+                .style("top", (event.y) / 2 - 30 + "px")
+        }
+
         let mouseLeave = function (d) {
+            Tooltip.style("opacity", 0)
             d3.selectAll(".Country")
                 .style("opacity", .8)
             d3.select(this)
@@ -78,11 +95,14 @@ export async function MapGraph(geoJson, gameName, {
                 d.total = data.get(d.properties.name) || 0;
                 return colorScale(d.total);
             })
-            .style("stroke", "#c9d6ff")
-            .attr("class", function (d) { return "Country" })
-            .style("opacity", .8)
             .on("mouseover", mouseOver)
+            .on("mousemove", mouseMove)
             .on("mouseleave", mouseLeave)
+            .attr("class", function (d) { return "Country" })
+            .style("stroke", "#c9d6ff")
+            .style("opacity", .8)
+
+
     })
 
     return Object.assign(svg.node(), {});

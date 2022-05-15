@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>ByakuGaSTeam</title>
@@ -14,19 +15,56 @@
 
     <!--<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>-->
 </head>
-    <body>
-        <!--<a href="https://www.azquotes.com/quote/31954" title="Edward de Bono quote"><img src="//www.azquotes.com/picture-quotes/quote-humor-is-by-far-the-most-significant-activity-of-the-human-brain-edward-de-bono-3-19-54.jpg" alt="Humor is by far the most significant activity of the human brain. - Edward de Bono"></a>-->
-        
-        <select style="width: 120px;" id="genreBox"></select>
-        <select style= "width: 120px;" id="gameBox"></select>
-        <h1>Players Count</h1>
-        <div id="map_graph_div">
-        </div>
-        <div id="line_graph_div">
-        </div>
-        <div id="calendar_graph_div">
-        </div>
-    </body>
-    
-    <script type="module" src="scripts/main.js"></script>
-</html>    
+
+<body>
+    <!--<a href="https://www.azquotes.com/quote/31954" title="Edward de Bono quote"><img src="//www.azquotes.com/picture-quotes/quote-humor-is-by-far-the-most-significant-activity-of-the-human-brain-edward-de-bono-3-19-54.jpg" alt="Humor is by far the most significant activity of the human brain. - Edward de Bono"></a>-->
+
+    <select style="width: 120px;" id="genreBox"></select>
+    <select style="width: 120px;" id="gameBox"></select>
+    <h1>Players Count</h1>
+    <div id="loading">
+    </div>
+    <div id="map_graph_div">
+    </div>
+    <div id="line_graph_div">
+    </div>
+    <div id="calendar_graph_div">
+    </div>
+</body>
+
+<style>
+    /* Tooltip CSS */
+    .tooltip {
+        line-height: 1.5;
+        font-weight: 400;
+        font-family: "avenir next", Arial, sans-serif;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.6);
+        color: #FFA500;
+        border-radius: 1px;
+        pointer-events: none;
+        width: fit-content;
+    }
+
+    .loading {
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 99;
+    }
+
+    #loading-image {
+        z-index: 100;
+    }
+</style>
+
+<script type="module" src="scripts/main.js"></script>
+
+</html>
