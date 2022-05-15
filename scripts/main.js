@@ -1,11 +1,13 @@
-import { loadSteamDataset, getPriceHistory, getPlayerCount, PlayerCountHistoryPathType } from "./datasetControl.js";
+import { loadSteamDataset, getPriceHistory, getPlayerCount, PlayerCountHistoryPathType, loadGeoJson } from "./datasetControl.js";
 import { Calendar } from "./thirdparty/Calendar.js";
 import { buildLineGraph, LineGraph } from "./graphics.js"
 import { calendarCluster } from "./calendarCluster.js";
 import { kmeans } from "./thirdparty/Kmeans.js";
 import { getGenres, getGamesByGenre, adaptDataToKmeans, findGameById, groupDataFromClusters } from "./utils.js";
+import { MapGraph } from "./map.js";
 
 let steamDataset = await loadSteamDataset();
+let geoJson = await loadGeoJson();
 
 //console.log(steamDataset);
 /*
@@ -65,10 +67,9 @@ d3.select("#genreBox")
         d3.select("#gameBox")
             .on("change", async function(d) {
                 const gameId = d3.select(this).property("value");
-                
+
                 let game = findGameById(steamDataset, gameId);
 
-                // console.log(game);
                 // need to adapt here for the dataset type. Maybe this isn't suppost to be a user decision 
                 let gamePlayerCount = await getPlayerCount(game["id"], PlayerCountHistoryPathType.f2f);
 
@@ -87,11 +88,18 @@ d3.select("#genreBox")
 
                 let clusteringData = groupDataFromClusters(convertedData, "x", "y", "cluster");
 
-                console.log(clusteringData);
                 const lineGraph = LineGraph(clusteringData, {
                     x: "x",
                     y: "y"
                 });
+                console.log(lineGraph);
+
+                const gameName = game["props"]["name"];
+
+                const mapGraph = await MapGraph(geoJson, gameName);
+                
+                d3.select("#map_graph_div").node().innerHTML = '';
+                d3.select("#map_graph_div").node().appendChild(mapGraph);
 
                 d3.select("#line_graph_div").node().innerHTML = '';
                 d3.select("#line_graph_div").node().appendChild(lineGraph);

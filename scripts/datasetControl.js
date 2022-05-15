@@ -12,6 +12,8 @@ const steamPublishersFilename = dataPath + "applicationPublishers.csv";
 const steamSupportedLanguagesFilename = dataPath + "applicationSupportedlanguages.csv";
 const steamTagsFilename = dataPath + "applicationTags.csv";
 
+const geoJsonFilename =  "../data/GeoData/world.geojson";
+
 /**
  * Private function. Check if some file exists using CommonJs standard
  * @param {string} url - The path for the file.
@@ -97,6 +99,12 @@ export async function loadSteamDataset(){
     });
 
     return steamDataset;
+}
+
+export async function loadGeoJson(){
+    let geoJson = await d3.json(geoJsonFilename);
+
+    return geoJson;
 }
 
 ///The Domain for the SteamDataset in Price History -> 07-04-2019 to 12-08-2020
