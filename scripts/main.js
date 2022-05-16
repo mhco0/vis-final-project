@@ -3,7 +3,7 @@ import { Calendar } from "./thirdparty/Calendar.js";
 import { buildLineGraph, LineGraph } from "./graphics.js"
 import { calendarCluster } from "./calendarCluster.js";
 import { kmeans } from "./thirdparty/Kmeans.js";
-import { getGenres, getGamesByGenre, adaptDataToKmeans, findGameById, groupDataFromClusters } from "./utils.js";
+import { getGenres, getGamesByGenre, adaptDataToKmeans, findGameById, groupDataFromClusters, groupByDay } from "./utils.js";
 import { MapGraph } from "./map.js";
 
 let steamDataset = await loadSteamDataset();
@@ -90,12 +90,21 @@ d3.select("#genreBox")
                 d3.select("#map_graph_div").node().appendChild(mapGraph);
 
                 if(gamePlayerCount.length > 0){
-                    let convertedData = adaptDataToKmeans(gamePlayerCount, "time", "player_count");
+                    let convertedData = groupByDay(gamePlayerCount, "time", "player_count");//adaptDataToKmeans(gamePlayerCount, "time", "player_count");
     
                     kmeans(convertedData, K);
     
+                    console.log(convertedData);
+
                     const calendar = Calendar(convertedData, {
-                        x: d => d["x"],
+                        x: d => {
+                            var dateParts = d["day"].split("/");
+
+                            // month is 0-based, that's why we need dataParts[1] - 1
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
+
+                            return dateObject;
+                        },
                         y: d => d["cluster"],
                         colors: d3.schemeTableau10,
                         clusterNumber: K
