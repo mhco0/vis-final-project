@@ -154,6 +154,19 @@ export async function getPlayerCount(id, path){
     return playerCount;
 }
 
+
+/**
+ * This function returns the corret path for some player count file based in the @p id.
+ * @param {number} id - The application id from the StreamDataset
+ * @returns {string} The path for the filename for this @p id or "" if the id isn't from this dataset.
+*/
+export async function getCorretPlayerCountPathById(id){
+    if (await fileExists(PlayerCountHistoryPathType.f2f + "" + id + ".csv")) return PlayerCountHistoryPathType.f2f;
+    if (await fileExists(PlayerCountHistoryPathType.h2h + "" + id + ".csv")) return PlayerCountHistoryPathType.h2h;
+
+    return "";
+}
+
 /**
  * This function gets the price history for some @p id.
  * @param {number} id - The application id from the StreamDataset.

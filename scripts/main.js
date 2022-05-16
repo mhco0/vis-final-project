@@ -1,4 +1,4 @@
-import { loadSteamDataset, getPriceHistory, getPlayerCount, PlayerCountHistoryPathType, loadGeoJson } from "./datasetControl.js";
+import { loadSteamDataset, getPriceHistory, getPlayerCount, PlayerCountHistoryPathType, loadGeoJson, getCorretPlayerCountPathById} from "./datasetControl.js";
 import { Calendar } from "./thirdparty/Calendar.js";
 import { buildLineGraph, LineGraph } from "./graphics.js"
 import { calendarCluster } from "./calendarCluster.js";
@@ -82,7 +82,8 @@ d3.select("#genreBox")
                 let game = findGameById(steamDataset, gameId);
 
                 // need to adapt here for the dataset type. Maybe this isn't suppost to be a user decision 
-                let gamePlayerCount = await getPlayerCount(game["id"], PlayerCountHistoryPathType.f2f);
+                let gamePath = await getCorretPlayerCountPathById(game["id"]);
+                let gamePlayerCount = await getPlayerCount(game["id"], gamePath);
 
                 const gameName = game["props"]["name"];
                 const mapGraph = await MapGraph(geoJson, gameName);
@@ -106,7 +107,7 @@ d3.select("#genreBox")
                         x: "x",
                         y: "y"
                     });
-                    console.log(lineGraph);
+                    //console.log(lineGraph);
                     
                     d3.select("#line_graph_div").node().appendChild(lineGraph);
                     d3.select("#calendar_graph_div").node().appendChild(calendar);

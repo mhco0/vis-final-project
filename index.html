@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <title>ByakuGaSTeam</title>
@@ -15,24 +15,26 @@
 
     <!--<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>-->
 </head>
-
 <body>
     <!--<a href="https://www.azquotes.com/quote/31954" title="Edward de Bono quote"><img src="//www.azquotes.com/picture-quotes/quote-humor-is-by-far-the-most-significant-activity-of-the-human-brain-edward-de-bono-3-19-54.jpg" alt="Humor is by far the most significant activity of the human brain. - Edward de Bono"></a>-->
 
-    <select style="width: 120px;" id="genreBox"></select>
-    <select style="width: 120px;" id="gameBox"></select>
-    <h1>Players Count</h1>
+    <select id="genreBox"></select>
+    <select id="gameBox"></select>
+    <h1>Players Count Patterns</h1>
     <div id="loading">
     </div>
-    <div id="map_graph_div">
-    </div>
-    <div id="line_graph_div">
-    </div>
-    <div id="calendar_graph_div">
+    <div id="container">
+        <div id="calendar_graph_div">
+        </div>
+        <div id="line_graph_div">
+        </div>
+        <div id="map_graph_div">
+        </div>
     </div>
 </body>
 
 <style>
+    * {margin: 0; padding: 0;}
     /* Tooltip CSS */
     .tooltip {
         line-height: 1.5;
@@ -60,11 +62,34 @@
         z-index: 99;
     }
 
+    #genreBox, #gameBox{
+        width: auto;
+    }
+
     #loading-image {
         z-index: 100;
+    }
+
+    #container {
+        height: 100%; width:100%; font-size: 0;
+    }
+
+    #map_graph_div, #line_graph_div, #calendar_graph_div {
+        display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px; 
+    }
+
+    #map_graph_div {
+        width: 34%;
+    }
+
+    #line_graph_div {
+        width: 34%;
+    }
+
+    #calendar_graph_div {
+        width: 32%;
     }
 </style>
 
 <script type="module" src="scripts/main.js"></script>
-
 </html>
