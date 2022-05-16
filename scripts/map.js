@@ -1,6 +1,6 @@
 export async function MapGraph(geoJson, gameName, {
-    width = 450, // width of the chart, in pixels
-    height = 370,
+    width = 550,//450, // width of the chart, in pixels
+    height = 450,//370,
     margin = { top: 10, right: 30, bottom: 30, left: 60 },
 } = {}) {
     const svgWidth = width - margin.left - margin.right;
@@ -18,15 +18,20 @@ export async function MapGraph(geoJson, gameName, {
     // Map and projection
     const path = d3.geoPath();
     const projection = d3.geoMercator()
-        .scale(70)
-        .center([0, 20])
-        .translate([width / 2, height / 2]);
+                        .rotate([-11, 0])
+                        .scale(75)
+                        .center([0, 20])
+                        .translate([width / 2, height / 2]);
+        //.scale(70)
+        //.center([0, 20])
+        //.translate([width / 2, height / 2]);
 
     // Data and color scale
     const data = new Map();
     const colorScale = d3.scaleThreshold()
         .domain([1, 5, 10, 15, 20, 30, 45, 60, 75, 100])
-        .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
+        .range(d3.schemeBlues[9]);
+        //.range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
 
     // Get trends from API and boot
     await Promise.all([

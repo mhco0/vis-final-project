@@ -4,6 +4,8 @@ import { buildLineGraph, LineGraph } from "./graphics.js"
 import { calendarCluster } from "./calendarCluster.js";
 import { kmeans } from "./thirdparty/Kmeans.js";
 import { getGenres, getGamesByGenre, adaptDataToKmeans, findGameById, groupDataFromClusters, groupByDay } from "./utils.js";
+import { Swatches } from "./thirdparty/Swatches.js";
+//import { Legend } from "./thirdparty/Legend.js";
 import { MapGraph } from "./map.js";
 
 let steamDataset = await loadSteamDataset();
@@ -35,7 +37,7 @@ let csPriceHistory = await getPlayerCount(steamDataset[1]["id"], PlayerCountHist
 const genres = getGenres(steamDataset);
 genres.sort(function(a, b){return a.localeCompare(b);});
 
-let K = 10;
+let K = 4;
 
 //console.log(getGamesByGenre(steamDataset, genres[5]));
 
@@ -55,7 +57,14 @@ d3.select("#genreBox")
         const gamesByGenre = getGamesByGenre(steamDataset, selectedGenre);
         gamesByGenre.sort(function(a, b){return a["name"].localeCompare(b["name"]);});
 
+      
         d3.select("#gameBox").html("");
+        d3.select("#gameBox")
+            .append("option")
+            .text("Select your game")
+            .attr("value", "")
+            .property("disabled", true);
+
         d3.select("#gameBox")
             .selectAll("myOptions")
             .data(gamesByGenre)
@@ -112,14 +121,18 @@ d3.select("#genreBox")
     
                     let clusteringData = groupDataFromClusters(convertedData, "x", "y", "cluster");
     
+                    console.log(clusteringData);
+
                     const lineGraph = LineGraph(clusteringData, {
                         x: "x",
-                        y: "y"
+                        y: "y",
+                        clusterNumber: K
                     });
                     //console.log(lineGraph);
                     
                     d3.select("#line_graph_div").node().appendChild(lineGraph);
                     d3.select("#calendar_graph_div").node().appendChild(calendar);
+                    d3.select("#swatches_div").node().appendChild(Swatches(d3.scaleOrdinal([...Array(10).keys()].map((cluster) => "cluster " + String(cluster)), d3.schemeCategory10)));
                 }
 
                 d3.select("#loading").attr("class", "").node().innerHTML = '';

@@ -5,7 +5,7 @@ export function Calendar(data, {
     x = ([x]) => x, // given d in data, returns the (temporal) x-value
     y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
     title, // given d in data, returns the title text
-    width = 928, // width of the chart, in pixels
+    width = 950, // width of the chart, in pixels
     cellSize = 17, // width and height of an individual day, in pixels
     weekday = "monday", // either: weekday, sunday, or monday
     formatDay = i => "SMTWTFS"[i], // given a day number in [0, 6], the day-of-week label
@@ -35,18 +35,21 @@ export function Calendar(data, {
 
     //const color = d3.scaleOrdinal(clusterDomain, colors).unknown("none");
     //const color = d3.scaleSequential([-max, +max], colors).unknown("none");
-    const color = d3.scaleSequential(clusterDomain, colors).unknown("none");
+    //d3.scaleSequential(clusterDomain, colors).unknown("none");
+    const color = d3.scaleThreshold()
+    .domain(clusterDomain)
+    .range(d3.schemeTableau10); 
     
 
-  
     // Construct formats.
     formatMonth = d3.utcFormat(formatMonth);
   
     // Compute titles.
     if (title === undefined) {
       const formatDate = d3.utcFormat("%B %-d, %Y");
-      const formatValue = color.tickFormat(100, yFormat);
-      title = i => `${formatDate(X[i])}\n${formatValue(Y[i])}`;
+      //const formatValue = color.tickFormat(100, yFormat);
+      //formatValue(Y[i])
+      title = i => `${formatDate(X[i])}`;//\n${}`;
     } else if (title !== null) {
       const T = d3.map(data, title);
       title = i => T[i];

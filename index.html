@@ -12,19 +12,26 @@
     <script type="module" src="scripts/thirdparty/Calendar.js"></script>
     <script type="module" src="scripts/thirdparty/lodash.js"></script>
     <script type="module" src="scripts/thirdparty/Kmeans.js"></script>
+    <script type="module" src="scripts/thirdparty/Legend.js"></script>
+    <script type="module" src="scripts/thirdparty/Swatches.js"></script>
 
     <!--<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>-->
 </head>
 <body>
     <!--<a href="https://www.azquotes.com/quote/31954" title="Edward de Bono quote"><img src="//www.azquotes.com/picture-quotes/quote-humor-is-by-far-the-most-significant-activity-of-the-human-brain-edward-de-bono-3-19-54.jpg" alt="Humor is by far the most significant activity of the human brain. - Edward de Bono"></a>-->
 
-    <select id="genreBox"></select>
-    <select id="gameBox"></select>
+    <select id="genreBox">
+        <option value="" disabled selected>Select your genre</option>
+    </select>
+    <select id="gameBox">
+    </select>
     <h1>Players Count Patterns</h1>
     <div id="loading">
     </div>
     <div id="container">
         <div id="calendar_graph_div">
+        </div>
+        <div id="swatches_div">
         </div>
         <div id="line_graph_div">
         </div>
