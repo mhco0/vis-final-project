@@ -70,7 +70,7 @@ export function LineGraph(dataset, {
 
     //console.log(svgWidth, svgHeight);
 
-    console.log(clusterNumber);
+    //console.log(clusterNumber);
 
     const lineGraphId = "line_graph";
     const lineGraphViewGroupId = "line_graph_view_group";
@@ -82,7 +82,7 @@ export function LineGraph(dataset, {
 
     const color = d3.scaleThreshold()
                     .domain(clusterDomain)
-                    .range(d3.schemeTableau10);
+                    .range(colors);
     //d3.scaleSequential(clusterDomain, colors).unknown("none");
 
     const svg = d3.create("svg")

@@ -14,7 +14,7 @@ class requestHandler(BaseHTTPRequestHandler):
         print(self.path)
         method = self.extractMethod(self.path)
         if method == '/InterestOverTime':
-            search = self.extractSearch(self.path)
+            search = self.extract(self.path, "search")
             pytrend.build_payload([search])
             df = pytrend.interest_over_time()
             print(df.head())
@@ -22,8 +22,14 @@ class requestHandler(BaseHTTPRequestHandler):
             self.wfile.write(js.encode())
 
         elif method == '/InterestByRegion':
-            search = self.extractSearch(self.path)
-            pytrend.build_payload([search])
+            search = self.extract(self.path, "search")
+            date = self.extract(self.path, "date") # yyyy-mm-dd yyyy-mm-dd
+
+            if date != '':
+                pytrend.build_payload([search], timeframe = date)
+            else:
+                pytrend.build_payload([search])
+            
             df = pytrend.interest_by_region(resolution='COUNTRY', inc_low_vol=True,  inc_geo_code=True)
             print(df.head())
             js = df.to_json(orient = 'index')
@@ -33,11 +39,14 @@ class requestHandler(BaseHTTPRequestHandler):
         method = path.split('?')
         return method[0] if len(method) > 0 else ''
     
-    def extractSearch(self, path):
+    def extract(self, path, key):
         query = urlparse(path).query
         query_components = dict(qc.split("=") for qc in query.split("&"))
-        search = query_components["search"]
-        return unquote(search)
+        if key in query_components:
+            search = query_components[key]
+            return unquote(search)
+
+        return ''
 
 
 

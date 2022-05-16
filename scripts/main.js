@@ -5,7 +5,6 @@ import { calendarCluster } from "./calendarCluster.js";
 import { kmeans } from "./thirdparty/Kmeans.js";
 import { getGenres, getGamesByGenre, adaptDataToKmeans, findGameById, groupDataFromClusters, groupByDay } from "./utils.js";
 import { Swatches } from "./thirdparty/Swatches.js";
-//import { Legend } from "./thirdparty/Legend.js";
 import { MapGraph } from "./map.js";
 
 let steamDataset = await loadSteamDataset();
@@ -32,7 +31,17 @@ let csPriceHistory = await getPlayerCount(steamDataset[1]["id"], PlayerCountHist
 
 //d3.select("#line_graph_div").node().appendChild(calendar);
 
+const processLoading = () => {
+    d3.select("#loading")
+        .attr("class", "loading")
+        .append("img")
+        .attr("src", "../assets/ajax-loader.gif")
+        .attr("alt", "Loading...");
+}
 
+const finishLoading = () => {
+    d3.select("#loading").attr("class", "").node().innerHTML = '';
+}
 
 const genres = getGenres(steamDataset);
 genres.sort(function(a, b){return a.localeCompare(b);});
@@ -103,7 +112,7 @@ d3.select("#genreBox")
     
                     kmeans(convertedData, K);
     
-                    console.log(convertedData);
+                    //console.log(convertedData);
 
                     const calendar = Calendar(convertedData, {
                         x: d => {
@@ -121,7 +130,7 @@ d3.select("#genreBox")
     
                     let clusteringData = groupDataFromClusters(convertedData, "x", "y", "cluster");
     
-                    console.log(clusteringData);
+                    //console.log(clusteringData);
 
                     const lineGraph = LineGraph(clusteringData, {
                         x: "x",
@@ -130,9 +139,26 @@ d3.select("#genreBox")
                     });
                     //console.log(lineGraph);
                     
+                    d3.select("#line_graph_div")
+                    .append("h3")
+                    .text("Player Count by Hour");
                     d3.select("#line_graph_div").node().appendChild(lineGraph);
                     d3.select("#calendar_graph_div").node().appendChild(calendar);
-                    d3.select("#swatches_div").node().appendChild(Swatches(d3.scaleOrdinal([...Array(10).keys()].map((cluster) => "cluster " + String(cluster)), d3.schemeCategory10)));
+
+                    d3.select("#calendar_graph_div").selectAll("rect").on("click", async function(d){
+                        processLoading();
+                        let date = d3.select(this).attr("value");
+
+                        let converted = meme(date);
+
+                        const mapGraph = await MapGraph(geoJson, gameName, { dateRange : converted});
+                        d3.select("#map_graph_div").node().innerHTML = '';
+                        d3.select("#map_graph_div").node().appendChild(mapGraph);
+
+                        finishLoading();
+                    })
+
+                    d3.select("#swatches_div").node().appendChild(Swatches(d3.scaleOrdinal([...Array(K + 1).keys()].map((cluster) => "cluster " + String(cluster)), d3.schemeTableau10)));
                 }
 
                 d3.select("#loading").attr("class", "").node().innerHTML = '';
