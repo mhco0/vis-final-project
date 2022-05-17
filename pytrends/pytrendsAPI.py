@@ -26,6 +26,7 @@ class requestHandler(BaseHTTPRequestHandler):
             date = self.extract(self.path, "date") # yyyy-mm-dd yyyy-mm-dd
 
             if date != '':
+                print(date)
                 pytrend.build_payload([search], timeframe = date)
             else:
                 pytrend.build_payload([search])

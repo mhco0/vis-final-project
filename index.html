@@ -15,6 +15,7 @@
     <script type="module" src="scripts/thirdparty/htl.js"></script>
     <script type="module" src="scripts/thirdparty/Legend.js"></script>
     <script type="module" src="scripts/thirdparty/Swatches.js"></script>
+    <link rel="stylesheet" href="style/style.css">
 
     <!--<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>-->
 </head>
@@ -24,7 +25,7 @@
     <select id="genreBox">
         <option value="" disabled selected>Select your genre</option>
     </select>
-    <select id="gameBox">
+    <select style="opacity: 0;" id="gameBox">
     </select>
     <h1>Players Count Patterns</h1>
     <div id="loading">
@@ -40,64 +41,6 @@
         </div>
     </div>
 </body>
-
-<style>
-    * {margin: 0; padding: 0;}
-    /* Tooltip CSS */
-    .tooltip {
-        line-height: 1.5;
-        font-weight: 400;
-        font-family: "avenir next", Arial, sans-serif;
-        padding: 6px;
-        background: rgba(0, 0, 0, 0.6);
-        color: #FFA500;
-        border-radius: 1px;
-        pointer-events: none;
-        width: fit-content;
-    }
-
-    .loading {
-        position: fixed;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        opacity: 0.7;
-        background-color: #fff;
-        z-index: 99;
-    }
-
-    #genreBox, #gameBox{
-        width: auto;
-    }
-
-    #loading-image {
-        z-index: 100;
-    }
-
-    #container {
-        height: 100%; width:100%; font-size: 0;
-    }
-
-    #map_graph_div, #line_graph_div, #calendar_graph_div {
-        display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px; 
-    }
-
-    #map_graph_div {
-        width: 34%;
-    }
-
-    #line_graph_div {
-        width: 34%;
-    }
-
-    #calendar_graph_div {
-        width: 32%;
-    }
-</style>
 
 <script type="module" src="scripts/main.js"></script>
 </html>

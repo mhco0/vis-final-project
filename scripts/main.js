@@ -31,6 +31,18 @@ let csPriceHistory = await getPlayerCount(steamDataset[1]["id"], PlayerCountHist
 
 //d3.select("#line_graph_div").node().appendChild(calendar);
 
+const convertDateToPyTrends = (date) => {
+    let convertedDate = new Date(Date.parse(date));
+
+    console.log(convertedDate.toString());
+
+    let convertedString = "";
+
+    convertedString = convertedDate.getUTCFullYear() + "-" + (convertedDate.getUTCMonth() + 1) + "-" + convertedDate.getUTCDate();
+
+    return convertedString + " " + convertedString;
+}
+
 const processLoading = () => {
     d3.select("#loading")
         .attr("class", "loading")
@@ -46,7 +58,7 @@ const finishLoading = () => {
 const genres = getGenres(steamDataset);
 genres.sort(function(a, b){return a.localeCompare(b);});
 
-let K = 4;
+let K = 7;
 
 //console.log(getGamesByGenre(steamDataset, genres[5]));
 
@@ -66,8 +78,7 @@ d3.select("#genreBox")
         const gamesByGenre = getGamesByGenre(steamDataset, selectedGenre);
         gamesByGenre.sort(function(a, b){return a["name"].localeCompare(b["name"]);});
 
-      
-        d3.select("#gameBox").html("");
+        d3.select("#gameBox").html("").style("opacity", 1);
         d3.select("#gameBox")
             .append("option")
             .text("Select your game")
@@ -94,6 +105,7 @@ d3.select("#genreBox")
                 d3.select("#map_graph_div").node().innerHTML = '';
                 d3.select("#line_graph_div").node().innerHTML = '';
                 d3.select("#calendar_graph_div").node().innerHTML = '';
+                d3.select("#swatches_div").node().innerHTML = '';
 
                 const gameId = d3.select(this).property("value");
 
@@ -149,10 +161,13 @@ d3.select("#genreBox")
                         processLoading();
                         let date = d3.select(this).attr("value");
 
-                        let converted = meme(date);
+                        let converted = convertDateToPyTrends(date);
+
+                        //console.log(converted);
+
+                        d3.select("#map_graph_div").node().innerHTML = '';
 
                         const mapGraph = await MapGraph(geoJson, gameName, { dateRange : converted});
-                        d3.select("#map_graph_div").node().innerHTML = '';
                         d3.select("#map_graph_div").node().appendChild(mapGraph);
 
                         finishLoading();

@@ -96,7 +96,7 @@ export function LineGraph(dataset, {
 
     let xScale = d3.scaleLinear()
                 .domain([0, 23])
-                .range([0, svgWidth - margin.right]).nice();
+                .range([0, svgWidth - margin.right])//.nice();
 
     let maxValue = 0;
     let minValue = Infinity;

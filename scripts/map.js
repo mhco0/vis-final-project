@@ -49,6 +49,7 @@ export async function MapGraph(geoJson, gameName, {
     ]).then(function (result) {
         let topo = geoJson;
         let trends = result[0];
+        console.log(trends);
         let countries = Object.keys(trends);
 
         countries.forEach(country => {
@@ -65,6 +66,13 @@ export async function MapGraph(geoJson, gameName, {
             data.set(id, trends[country][gameName]);
         });
 
+        d3.select("#map_graph_div")
+            .append("div")
+            .node()
+            .appendChild(Legend(d3.scaleThreshold([5, 10, 15, 20, 30, 45, 60, 75, 100], d3.schemeBlues[9]), {
+                title: "Interest"
+            }));
+
         // create a tooltip
         var Tooltip = d3.select("#map_graph_div")
             .append("div")
@@ -72,12 +80,7 @@ export async function MapGraph(geoJson, gameName, {
             .style("opacity", 0)
             .html( `<strong></strong><br/>Total:`)
 
-        var legend = d3.select("#map_graph_div")
-            .append("div")
-            .node()
-            .appendChild(Legend(d3.scaleThreshold([5, 10, 15, 20, 30, 45, 60, 75, 100], d3.schemeBlues[9]), {
-                title: "Interest"
-            }));
+        
 
         let mouseOver = function (d) {
             Tooltip.style("opacity", 1)

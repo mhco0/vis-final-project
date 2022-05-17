@@ -41,7 +41,7 @@ export const groupDataFromClusters = (data, xCol, yCol, clusterCol) => {
                 avg = sum / points.length;
             }    
 
-            groupedData[cluster].push({x: hour, y: avg});
+            groupedData[cluster].push({x: hour, y: Math.floor(avg)});
         }
     }
 
