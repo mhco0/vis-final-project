@@ -125,6 +125,11 @@ d3.select("#genreBox")
 
                 const gameName = game["props"]["name"];
                 const mapGraph = await MapGraph(geoJson, gameName);
+                d3.select("#map_graph_div")
+                .append("h3")
+                .text("Game Trends by region")
+                .style("text-align", "center");
+
                 d3.select("#map_graph_div").node().appendChild(mapGraph);
                 d3.select("#map_graph_div")
                     .append("div")
@@ -169,9 +174,15 @@ d3.select("#genreBox")
                     .append("h3")
                     .text("Player Count by Hour")
                     .style("text-align", "center")
-                    .style("margin-right", "80");
+                    .style("width", "550px");
 
                     d3.select("#line_graph_div").node().appendChild(lineGraph);
+
+                    d3.select("#calendar_graph_div")
+                        .append("h3")
+                        .text("Player Count Pattern by Day")
+                        .style("text-align", "center");
+
                     d3.select("#calendar_graph_div").node().appendChild(calendar);
 
                     d3.select("#calendar_graph_div").selectAll("rect").on("click", async function(d){
@@ -197,7 +208,9 @@ d3.select("#genreBox")
                     })
 
                     //console.log([...Array(K + 1).keys()]);
-                    d3.select("#swatches_div").node().appendChild(Swatches(d3.scaleOrdinal([...Array(K + 1).keys()].map((cluster) => "cluster " + String(cluster)), d3.schemeTableau10)));
+                    d3.select("#swatches_div").node().appendChild(Swatches(d3.scaleOrdinal([...Array(K + 1).keys()].map((cluster) => "cluster " + String(cluster)), d3.schemeTableau10), {
+                        marginLeft: 150
+                    }));
                 }
 
                 d3.select("#loading").attr("class", "").node().innerHTML = '';

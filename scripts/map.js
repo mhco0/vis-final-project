@@ -80,6 +80,8 @@ export async function MapGraph(geoJson, gameName, {
             d3.select(this)
                 .style("opacity", 1)
                 .style("stroke", "black")
+
+            
         }
 
         let mouseMove = function (event, d) {

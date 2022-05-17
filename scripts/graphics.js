@@ -152,7 +152,7 @@ export function LineGraph(dataset, {
         .attr("stroke", function(d) {
             return color(clusterDomain[i] - 1);
         })
-        .attr("stroke-width", 1.5)
+        .attr("stroke-width", 2)
         .attr("d", d3.line()
                 .x(function(d) {
                     return xScale(d[x]);
@@ -160,7 +160,16 @@ export function LineGraph(dataset, {
                 .y(function(d) { 
                     return yScale(d[y]); 
                 })
-        );
+        ).on("mouseover", function(d){
+            svg.selectAll("path")
+            .style("opacity", .1);
+
+            d3.select(this)
+                .style("opacity", 1);
+        }).on("mouseleave", function(d){
+            svg.selectAll("path")
+            .style("opacity", 1);
+        });
     }
     
     return Object.assign(svg.node(), {});
