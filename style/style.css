@@ -1,55 +1,78 @@
 * {margin: 0; padding: 0;}
-    /* Tooltip CSS */
-    .tooltip {
-        line-height: 1.5;
-        font-weight: 400;
-        font-family: "avenir next", Arial, sans-serif;
-        padding: 6px;
-        background: rgba(0, 0, 0, 0.6);
-        color: #FFA500;
-        border-radius: 1px;
-        pointer-events: none;
-        width: fit-content;
-    }
 
-    .loading {
-        position: fixed;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        opacity: 0.7;
-        background-color: #fff;
-        z-index: 99;
-    }
+html, body {
+    margin: 0;
+    height: 100%;
+    
+}
 
-    #genreBox, #gameBox{
-        width: auto;
-    }
+/* Tooltip CSS */
+.tooltip {
+    line-height: 1.5;
+    font-weight: 400;
+    font-family: "avenir next", Arial, sans-serif;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #FFA500;
+    border-radius: 1px;
+    pointer-events: none;
+    width: fit-content;
+}
 
-    #loading-image {
-        z-index: 100;
-    }
+.loading {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.7;
+    background-color: #fff;
+    z-index: 99;
+}
 
-    #container {
-        height: 100%; width:100%; font-size: 0;
-    }
+#view {
+    height: 100vh;
+    overflow: hidden;
+    border-style: dashed;
+    border-color: deeppink;
+    border-width: 1px;
+}
 
-    #map_graph_div, #line_graph_div, #calendar_graph_div {
-        display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px; 
-    }
+#genreBox, #gameBox{
+    width: auto;
+}
 
-    #map_graph_div {
-        width: 34%;
-    }
+#loading-image {
+    z-index: 100;
+}
 
-    #line_graph_div {
-        width: 34%;
-    }
+#container {
+    height: 100%; width:100%; font-size: 0;
+}
 
-    #calendar_graph_div {
-        width: 32%;
-    }
+#left_container {
+    width: 40%;
+    float: left;
+}
+
+#map_graph_div, #line_graph_div, #calendar_graph_div {
+    display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px; 
+}
+
+#map_graph_div {
+    width: 60%;
+    height: auto;
+    float: right;
+}
+
+#line_graph_div {
+    width: 100%;
+}
+
+#calendar_graph_div {
+    width: 80%;
+    height: 50%;
+}

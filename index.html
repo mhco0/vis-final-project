@@ -21,23 +21,28 @@
 </head>
 <body>
     <!--<a href="https://www.azquotes.com/quote/31954" title="Edward de Bono quote"><img src="//www.azquotes.com/picture-quotes/quote-humor-is-by-far-the-most-significant-activity-of-the-human-brain-edward-de-bono-3-19-54.jpg" alt="Humor is by far the most significant activity of the human brain. - Edward de Bono"></a>-->
-
-    <select id="genreBox">
-        <option value="" disabled selected>Select your genre</option>
-    </select>
-    <select style="opacity: 0;" id="gameBox">
-    </select>
-    <h1>Players Count Patterns</h1>
-    <div id="loading">
-    </div>
-    <div id="container">
-        <div id="calendar_graph_div">
+    <div id="view">
+        <div id="select_area">
+            <select id="genreBox">
+                <option value="" disabled selected>Select your genre</option>
+            </select>
+            <select style="opacity: 0;" id="gameBox">
+            </select>
         </div>
-        <div id="swatches_div">
+        <h1>Players Count Patterns</h1>
+        <div id="loading">
         </div>
-        <div id="line_graph_div">
-        </div>
-        <div id="map_graph_div">
+        <div id="container">
+            <div id="left_container">
+                <div id="calendar_graph_div">
+                </div>
+                <div id="swatches_div">
+                </div>
+                <div id="line_graph_div">
+                </div>
+            </div>
+            <div id="map_graph_div">
+            </div>
         </div>
     </div>
 </body>

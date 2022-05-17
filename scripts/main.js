@@ -6,6 +6,7 @@ import { kmeans } from "./thirdparty/Kmeans.js";
 import { getGenres, getGamesByGenre, adaptDataToKmeans, findGameById, groupDataFromClusters, groupByDay } from "./utils.js";
 import { Swatches } from "./thirdparty/Swatches.js";
 import { MapGraph } from "./map.js";
+import { Legend } from "./thirdparty/Legend.js";
 
 let steamDataset = await loadSteamDataset();
 let geoJson = await loadGeoJson();
@@ -118,6 +119,12 @@ d3.select("#genreBox")
                 const gameName = game["props"]["name"];
                 const mapGraph = await MapGraph(geoJson, gameName);
                 d3.select("#map_graph_div").node().appendChild(mapGraph);
+                d3.select("#map_graph_div")
+                    .append("div")
+                    .node()
+                    .appendChild(Legend(d3.scaleThreshold([5, 10, 15, 20, 30, 45, 60, 75, 100], d3.schemeBlues[9]), {
+                        title: "Interest"
+                    }));
 
                 if(gamePlayerCount.length > 0){
                     let convertedData = groupByDay(gamePlayerCount, "time", "player_count");//adaptDataToKmeans(gamePlayerCount, "time", "player_count");
@@ -169,6 +176,12 @@ d3.select("#genreBox")
 
                         const mapGraph = await MapGraph(geoJson, gameName, { dateRange : converted});
                         d3.select("#map_graph_div").node().appendChild(mapGraph);
+                        d3.select("#map_graph_div")
+                            .append("div")
+                            .node()
+                            .appendChild(Legend(d3.scaleThreshold([5, 10, 15, 20, 30, 45, 60, 75, 100], d3.schemeBlues[9]), {
+                                title: "Interest"
+                            }));
 
                         finishLoading();
                     })

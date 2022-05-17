@@ -1,8 +1,8 @@
-import { Legend } from "./thirdparty/Legend.js";
+
 
 export async function MapGraph(geoJson, gameName, {
-    width = 550,//450, // width of the chart, in pixels
-    height = 450,//370,
+    width = 1050,//450, // width of the chart, in pixels
+    height = 650,//370,
     margin = { top: 10, right: 30, bottom: 30, left: 60 },
     dateRange = ""
 } = {}) {
@@ -22,7 +22,7 @@ export async function MapGraph(geoJson, gameName, {
     const path = d3.geoPath();
     const projection = d3.geoMercator()
                         .rotate([-11, 0])
-                        .scale(75)
+                        .scale(120)
                         .center([0, 20])
                         .translate([width / 2, height / 2]);
         //.scale(70)
@@ -65,13 +65,6 @@ export async function MapGraph(geoJson, gameName, {
 
             data.set(id, trends[country][gameName]);
         });
-
-        d3.select("#map_graph_div")
-            .append("div")
-            .node()
-            .appendChild(Legend(d3.scaleThreshold([5, 10, 15, 20, 30, 45, 60, 75, 100], d3.schemeBlues[9]), {
-                title: "Interest"
-            }));
 
         // create a tooltip
         var Tooltip = d3.select("#map_graph_div")
