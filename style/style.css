@@ -33,12 +33,16 @@ html, body {
     z-index: 99;
 }
 
+.slider {
+    margin-top: 0.3cm;
+}
+
 #view {
     height: 100vh;
     overflow: hidden;
-    border-style: dashed;
+    /*border-style: dashed;
     border-color: deeppink;
-    border-width: 1px;
+    border-width: 1px;*/
 }
 
 #genreBox, #gameBox{

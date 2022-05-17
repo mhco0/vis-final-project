@@ -59,7 +59,14 @@ const finishLoading = () => {
 const genres = getGenres(steamDataset);
 genres.sort(function(a, b){return a.localeCompare(b);});
 
-let K = 7;
+let K = Number(d3.select("#clusterRange").attr("value")) - 1;
+//console.log(K);
+
+d3.select("#clusterRange")
+    .on("input", function() {
+        K = Number(this.value) - 1;
+    });
+  
 
 //console.log(getGamesByGenre(steamDataset, genres[5]));
 
@@ -125,7 +132,7 @@ d3.select("#genreBox")
                     .appendChild(Legend(d3.scaleThreshold([5, 10, 15, 20, 30, 45, 60, 75, 100], d3.schemeBlues[9]), {
                         title: "Interest"
                     }));
-
+                
                 if(gamePlayerCount.length > 0){
                     let convertedData = groupByDay(gamePlayerCount, "time", "player_count");//adaptDataToKmeans(gamePlayerCount, "time", "player_count");
     
@@ -160,7 +167,10 @@ d3.select("#genreBox")
                     
                     d3.select("#line_graph_div")
                     .append("h3")
-                    .text("Player Count by Hour");
+                    .text("Player Count by Hour")
+                    .style("text-align", "center")
+                    .style("margin-right", "80");
+
                     d3.select("#line_graph_div").node().appendChild(lineGraph);
                     d3.select("#calendar_graph_div").node().appendChild(calendar);
 
@@ -186,6 +196,7 @@ d3.select("#genreBox")
                         finishLoading();
                     })
 
+                    //console.log([...Array(K + 1).keys()]);
                     d3.select("#swatches_div").node().appendChild(Swatches(d3.scaleOrdinal([...Array(K + 1).keys()].map((cluster) => "cluster " + String(cluster)), d3.schemeTableau10)));
                 }
 

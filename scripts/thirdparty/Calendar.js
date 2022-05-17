@@ -107,7 +107,7 @@ export function Calendar(data, {
         .attr("height", cellSize - 1)
         .attr("x", i => timeWeek.count(d3.utcYear(X[i]), X[i]) * cellSize + 0.5)
         .attr("y", i => countDay(X[i].getUTCDay()) * cellSize + 0.5)
-        .attr("fill", i => color(Y[i]))
+        .attr("fill", i => color(Y[i] - 1))
         .attr("value", title);
   
     if (title) cell.append("title")

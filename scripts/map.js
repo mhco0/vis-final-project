@@ -73,8 +73,6 @@ export async function MapGraph(geoJson, gameName, {
             .style("opacity", 0)
             .html( `<strong></strong><br/>Total:`)
 
-        
-
         let mouseOver = function (d) {
             Tooltip.style("opacity", 1)
             d3.selectAll(".Country")

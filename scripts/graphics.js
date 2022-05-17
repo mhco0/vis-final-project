@@ -150,7 +150,7 @@ export function LineGraph(dataset, {
         .datum(dataset[clusterDomain[i]])
         .attr("fill", "none")
         .attr("stroke", function(d) {
-            return color(clusterDomain[i]);
+            return color(clusterDomain[i] - 1);
         })
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
