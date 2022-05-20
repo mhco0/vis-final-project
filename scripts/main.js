@@ -196,6 +196,12 @@ d3.select("#genreBox")
                         d3.select("#map_graph_div").node().innerHTML = '';
 
                         const mapGraph = await MapGraph(geoJson, gameName, { dateRange : converted});
+
+                        d3.select("#map_graph_div")
+                            .append("h3")
+                            .text("Game Trends by region")
+                            .style("text-align", "center");
+
                         d3.select("#map_graph_div").node().appendChild(mapGraph);
                         d3.select("#map_graph_div")
                             .append("div")
@@ -203,6 +209,7 @@ d3.select("#genreBox")
                             .appendChild(Legend(d3.scaleThreshold([5, 10, 15, 20, 30, 45, 60, 75, 100], d3.schemeBlues[9]), {
                                 title: "Interest"
                             }));
+                        
 
                         finishLoading();
                     })
